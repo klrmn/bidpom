@@ -40,10 +40,10 @@ class BaseTest(object):
         verify_url = re.search(BrowserID.VERIFY_URL_REGEX,
                                mail[0]['text']).group(0)
 
-        selenium.get(verify_url)
-        from ... pages.RP.complete_registration import CompleteRegistration
+        from ... pages.SIA.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(selenium,
                                                      timeout,
+                                                     verify_url,
                                                      expect='success')
         assert 'Thank you' in complete_registration.thank_you
         return user

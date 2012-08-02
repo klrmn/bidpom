@@ -39,10 +39,10 @@ class TestSignIn(BaseTest):
         confirm_url = re.search(BrowserID.CONFIRM_URL_REGEX,
             mail[0]['text']).group(0)
 
-        mozwebqa.selenium.get(confirm_url)
-        from ... pages.RP.complete_registration import CompleteRegistration
+        from ... pages.SIA.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(mozwebqa.selenium,
             mozwebqa.timeout,
+            confirm_url,
             expect='success')
         assert 'Your address has been verified' in complete_registration.thank_you
 

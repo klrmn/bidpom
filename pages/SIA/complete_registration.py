@@ -4,7 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from base import Base
+from ..RP.base import Base
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -17,8 +17,16 @@ class CompleteRegistration(Base):
     _finish_locator = (By.CSS_SELECTOR, 'div.submit > button')
     _thank_you_locator = (By.ID, 'congrats')
 
-    def __init__(self, selenium, timeout, expect='success'):
+    def __init__(self, selenium, timeout, url, expect='success'):
+        """
+        class init method
+        :Args:
+        - url - the confirmation url from the email
+        - expect - success/verify (default success)
+        """
         Base.__init__(self, selenium, timeout)
+
+        self.selenium.get(url)
 
         if expect == 'success':
             WebDriverWait(self.selenium, self.timeout).until(

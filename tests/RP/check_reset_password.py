@@ -44,10 +44,10 @@ class TestSignIn(BaseTest):
 
         reset_url = re.search(BrowserID.RESET_URL_REGEX,
             mail[1]['text']).group(0)
-        mozwebqa.selenium.get(reset_url)
 
-        from ... pages.RP.complete_registration import CompleteRegistration
+        from ... pages.SIA.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(mozwebqa.selenium,
             mozwebqa.timeout,
+            reset_url,
             expect='success')
         assert 'Your address has been verified!' in complete_registration.thank_you

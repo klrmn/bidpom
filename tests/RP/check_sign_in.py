@@ -37,10 +37,9 @@ class TestSignIn(BaseTest):
     @pytest.mark.travis
     def test_sign_in_new_user_helper(self, mozwebqa):
         user = MockUser()
-        from ... pages.RP.sign_in import SignIn
-        signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='new')
+        browser_id = BrowserID(mozwebqa.selenium, mozwebqa.timeout)
         print 'signing in as %s' % user.primary_email
-        signin.sign_in_new_user(user.primary_email, 'password')
+        browser_id.sign_in_new_user(user.primary_email, 'password')
         mail = restmail.get_mail(user.primary_email, timeout=mozwebqa.timeout)
         assert 'Click to confirm this email address' in mail[0]['text']
 

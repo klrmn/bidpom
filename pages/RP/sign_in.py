@@ -30,6 +30,11 @@ class SignIn(Base):
     _add_new_email_locator = (By.ID, 'addNewEmail')
 
     def __init__(self, selenium, timeout, expect='new'):
+        """
+        class init method
+        :Args:
+         - expect - new (no browser cookie) / returning (browser has cookie)
+        """
         Base.__init__(self, selenium, timeout)
 
         if self.selenium.title != self._page_title:

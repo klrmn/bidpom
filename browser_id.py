@@ -23,3 +23,9 @@ class BrowserID(object):
         from pages.RP.sign_in import SignIn
         sign_in = SignIn(self.selenium, timeout=self.timeout, expect='new')
         sign_in.sign_in(email, password)
+
+    def sign_in_new_user(self, email, password):
+        """Registers using the specified email address and password."""
+        from pages.RP.sign_in import SignIn
+        sign_in = SignIn(self.selenium, timeout=self.timeout, expect='new')
+        sign_in.sign_in_new_user(email, 'password')

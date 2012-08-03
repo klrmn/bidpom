@@ -9,12 +9,12 @@ import re
 import pytest
 
 from ... import BrowserID
-from base import BaseTest
+from base import RPBaseTest
 from .. import restmail
 
 
 @pytest.mark.nondestructive
-class TestSignIn(BaseTest):
+class TestResetPassword(RPBaseTest):
 
     @pytest.mark.travis
     def test_reset_password(self, mozwebqa):
@@ -49,5 +49,4 @@ class TestSignIn(BaseTest):
         complete_registration = CompleteRegistration(mozwebqa.selenium,
             mozwebqa.timeout,
             reset_url,
-            expect='success')
-        assert 'Your address has been verified!' in complete_registration.thank_you
+            expect='redirect')

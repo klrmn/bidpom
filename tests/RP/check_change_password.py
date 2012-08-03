@@ -8,11 +8,11 @@ import pytest
 from selenium.webdriver.support.ui import WebDriverWait
 
 from ... import BrowserID
-from base import BaseTest
+from base import RPBaseTest
 
 
 @pytest.mark.nondestructive
-class TestSignIn(BaseTest):
+class TestChangePassword(RPBaseTest):
 
     @pytest.mark.travis
     def test_change_password(self, mozwebqa):

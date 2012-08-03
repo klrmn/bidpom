@@ -4,13 +4,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from base import Base
+from base import RPBase
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-class AccountManager(Base):
+class AccountManager(RPBase):
 
     _emails_locator = (By.CSS_SELECTOR, '#emailList .email')
     _edit_password_button_locator = (By.CSS_SELECTOR, '#edit_password button.edit')
@@ -21,7 +21,7 @@ class AccountManager(Base):
     _sign_out_locator = (By.CSS_SELECTOR, 'a.signOut')
 
     def __init__(self, selenium, timeout):
-        Base.__init__(self, selenium, timeout)
+        RPBase.__init__(self, selenium, timeout)
 
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.find_element(*self._emails_locator).is_displayed())

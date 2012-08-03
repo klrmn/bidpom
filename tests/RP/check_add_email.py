@@ -9,12 +9,12 @@ import re
 import pytest
 
 from ... import BrowserID
-from base import BaseTest
+from base import RPBaseTest
 from .. import restmail
 
 
 @pytest.mark.nondestructive
-class TestSignIn(BaseTest):
+class TestAddEmail(RPBaseTest):
 
     @pytest.mark.travis
     def test_add_email(self, mozwebqa):

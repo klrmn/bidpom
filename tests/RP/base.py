@@ -12,9 +12,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from ... import BrowserID
 from ... mocks.user import MockUser
 from .. import restmail
+from .. base import BaseTest
 
 
-class BaseTest(object):
+class RPBaseTest(BaseTest):
 
     def browserid_url(self, base_url):
         response = requests.get('%s/' % base_url, verify=False)
@@ -44,6 +45,5 @@ class BaseTest(object):
         complete_registration = CompleteRegistration(selenium,
                                                      timeout,
                                                      verify_url,
-                                                     expect='success')
-        assert 'Thank you' in complete_registration.thank_you
+                                                     expect='redirect')
         return user

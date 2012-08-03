@@ -9,12 +9,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from ... import BrowserID
 from ... mocks.user import MockUser
-from base import BaseTest
+from base import RPBaseTest
 from .. import restmail
 
 
 @pytest.mark.nondestructive
-class TestSignIn(BaseTest):
+class TestSignIn(RPBaseTest):
 
     def test_sign_in_helper(self, mozwebqa):
         browser_id = BrowserID(mozwebqa.selenium, mozwebqa.timeout)

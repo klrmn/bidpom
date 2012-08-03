@@ -4,13 +4,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from base import Base
+from base import RPBase
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-class SignIn(Base):
+class SignIn(RPBase):
 
     _this_is_not_me_locator = (By.ID, 'thisIsNotMe')
     _signed_in_email_locator = (By.CSS_SELECTOR, 'label[for=email_0]')
@@ -30,7 +30,7 @@ class SignIn(Base):
     _add_new_email_locator = (By.ID, 'addNewEmail')
 
     def __init__(self, selenium, timeout, expect='new'):
-        Base.__init__(self, selenium, timeout)
+        RPBase.__init__(self, selenium, timeout)
 
         if self.selenium.title != self._page_title:
             for handle in self.selenium.window_handles:
@@ -146,9 +146,11 @@ class SignIn(Base):
         """Clicks the 'next' button."""
         self.selenium.find_element(*self._next_locator).click()
         if expect == 'password':
+            # when this was just checking for displayed, it got a stale element exception
             WebDriverWait(self.selenium, self.timeout).until(
-                lambda s: s.find_element(
-                    *self._password_locator).is_displayed())
+                lambda s: s.find_element(*self._password_locator) and \
+                s.find_element(*self._password_locator).is_displayed(),
+                "password field did not appear within %s" % self.timeout)
         elif expect == 'verify':
             WebDriverWait(self.selenium, self.timeout).until(
                 lambda s: s.find_element(

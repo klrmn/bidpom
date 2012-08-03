@@ -18,17 +18,19 @@ class TestSignIn(RPBaseTest):
 
     def test_sign_in_helper(self, mozwebqa):
         browser_id = BrowserID(mozwebqa.selenium, mozwebqa.timeout)
-        browser_id.sign_in(mozwebqa.email, mozwebqa.password)
+        user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout, logout=True)
+        browser_id.sign_in(user.primary_email, user.password)
 
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
             lambda s: s.find_element_by_id('loggedin').is_displayed())
 
     def test_sign_in(self, mozwebqa):
+        user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout, logout=True)
         from ... pages.RP.sign_in import SignIn
         signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='new')
-        signin.email = mozwebqa.email
+        signin.email = user.primary_email
         signin.click_next(expect='password')
-        signin.password = mozwebqa.password
+        signin.password = user.password
         signin.click_sign_in()
 
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
@@ -63,8 +65,18 @@ class TestSignIn(RPBaseTest):
         assert 'Click to confirm this email address' in mail[0]['text']
 
     @pytest.mark.travis
+    @pytest.mark.xfail(reason="difficult to automate, see comment")
+    # either create_verified_user leaves the user logged in, in which case the user
+    # is not returning, they are newly signed up
+    # or create_verified_user logs out and the test has to click login
     def test_sign_in_returning_user(self, mozwebqa):
-        self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
+        self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout, logout=True)
         mozwebqa.selenium.get('%s/' % mozwebqa.base_url)
+        # wait for page done loading
+        WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
+            lambda s: s.find_element_by_css_selector('#loggedout button').is_displayed())
+        # request login
+        mozwebqa.selenium.find_element_by_css_selector('#loggedout button').click()
+        # cookie should be fresh, so it should not ask for credentials
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
             lambda s: s.find_element_by_id('loggedin').is_displayed())

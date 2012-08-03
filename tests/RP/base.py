@@ -32,7 +32,7 @@ class RPBaseTest(BaseTest):
         WebDriverWait(selenium, timeout).until(
             lambda s: s.find_element_by_css_selector('#loggedout button').is_displayed())
 
-    def create_verified_user(self, selenium, timeout):
+    def create_verified_user(self, selenium, timeout, logout=False):
         user = MockUser()
         from ... pages.RP.sign_in import SignIn
         signin = SignIn(selenium, timeout, expect='new')
@@ -46,4 +46,6 @@ class RPBaseTest(BaseTest):
                                                      timeout,
                                                      verify_url,
                                                      expect='redirect')
+        if logout:
+            self.log_out(selenium, timeout)
         return user

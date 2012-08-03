@@ -10,11 +10,12 @@ import requests
 from selenium.webdriver.support.ui import WebDriverWait
 
 import restmail
+from .. browser_id import BrowserID
 
 
 class BaseTest(object):
 
-    def get_confirm_url_from_email(email_address):
-        mail = restmail.get_mail(user.additional_emails[0],
-                                 timeout=mozwebqa.timeout)
-        return re.search(BrowserID.CONFIRM_URL_REGEX, mail[0]['text']).group(0)
+    def get_confirm_url_from_email(self, email_address, timeout):
+        mail = restmail.get_mail(email_address, timeout=timeout)
+        mail_text = mail[0]['text']
+        return re.search(BrowserID.EMAILED_URL_REGEX, mail_text).group(0)

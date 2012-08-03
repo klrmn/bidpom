@@ -43,11 +43,12 @@ class TestAddEmail(RPBaseTest):
         complete_registration = CompleteRegistration(mozwebqa.selenium,
             mozwebqa.timeout,
             confirm_url,
-            expect='success')
-        assert 'Your address has been verified' in complete_registration.thank_you
+            expect='redirect')
+            # page should redirect to mozwebqa.base_url
 
-        mozwebqa.selenium.get('%s/' % mozwebqa.base_url)
         self.log_out(mozwebqa.selenium, mozwebqa.timeout)
+
+        # log in returning user
         mozwebqa.selenium.find_element_by_css_selector('#loggedout button').click()
 
         signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='returning')

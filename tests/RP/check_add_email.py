@@ -25,7 +25,7 @@ class TestSignIn(BaseTest):
         self.log_out(mozwebqa.selenium, mozwebqa.timeout)
         mozwebqa.selenium.find_element_by_css_selector('#loggedout button').click()
 
-        from ... pages.RP.sign_in import SignIn
+        from ... pages.rp.sign_in import SignIn
         signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='returning')
         signin.click_add_another_email_address()
         signin.new_email = user.additional_emails[0]
@@ -40,7 +40,7 @@ class TestSignIn(BaseTest):
             mail[0]['text']).group(0)
 
         mozwebqa.selenium.get(confirm_url)
-        from ... pages.RP.complete_registration import CompleteRegistration
+        from ... pages.rp.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(mozwebqa.selenium,
             mozwebqa.timeout,
             expect='success')

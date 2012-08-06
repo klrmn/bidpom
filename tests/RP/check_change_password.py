@@ -19,7 +19,7 @@ class TestSignIn(BaseTest):
         user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
 
         mozwebqa.selenium.get(self.browserid_url(mozwebqa.base_url))
-        from ... pages.RP.account_manager import AccountManager
+        from ... pages.rp.account_manager import AccountManager
         account_manager = AccountManager(mozwebqa.selenium, mozwebqa.timeout)
 
         assert user.primary_email in account_manager.emails

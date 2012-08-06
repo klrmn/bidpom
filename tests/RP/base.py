@@ -33,7 +33,7 @@ class BaseTest(object):
 
     def create_verified_user(self, selenium, timeout):
         user = MockUser()
-        from ... pages.RP.sign_in import SignIn
+        from ... pages.rp.sign_in import SignIn
         signin = SignIn(selenium, timeout, expect='new')
         signin.sign_in_new_user(user.primary_email, user.password)
         mail = restmail.get_mail(user.primary_email, timeout=timeout)
@@ -41,7 +41,7 @@ class BaseTest(object):
                                mail[0]['text']).group(0)
 
         selenium.get(verify_url)
-        from ... pages.RP.complete_registration import CompleteRegistration
+        from ... pages.rp.complete_registration import CompleteRegistration
         complete_registration = CompleteRegistration(selenium,
                                                      timeout,
                                                      expect='success')

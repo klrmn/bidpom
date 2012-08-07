@@ -102,6 +102,30 @@ class SignIn(Base):
         """Get the text of the result notification title."""
         return self.selenium.find_element(*self._result_notification_title_locator).text
 
+    @property 
+    def current_ux_location(self):
+        '''
+        tells you which of the following stages you are in:
+        - email (email field and next button visible)
+        - signing-up (two password fields and verify email button visible)
+        - signing-in (one password field and sign-in button visible)
+        - verifying (email has been sent message visible)
+        '''
+        s = self.selenium
+        if s.find_element(*self._email_locator).is_displayed():
+            if s.find_element(*self._password_locator).is_displayed():
+                if s.find_element(*self._password_verify_locator).is_displayed() and \
+                   s.find_element(*self._verify_email_locator).is_displayed():
+                    return 'signing-up'
+                elif s.find_element(*self._sign_in_locator).is_displayed() and not \
+                     s.find_element(*self._password_verify_locator).is_displayed():
+                    return 'signing-in'
+            elif s.find_element(*self._next_locator).is_displayed():
+                return 'email'
+        elif s.find_element(*self._result_notification_title_locator).is_displayed():
+            return 'verifying'
+        raise Exception("current ux location not known")
+
     def sign_in(self, email, password):
         """Signs in with the provided email address and password."""
         self.email = email

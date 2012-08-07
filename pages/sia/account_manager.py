@@ -19,6 +19,7 @@ class AccountManager(Base):
     _change_password_done_locator = (By.ID, 'changePassword')
     _sign_in_locator = (By.CSS_SELECTOR, 'a.signIn')
     _sign_out_locator = (By.CSS_SELECTOR, 'a.signOut')
+    _cancel_account_locator = (By.ID, 'cancelAccount')
 
     def __init__(self, selenium, timeout):
         Base.__init__(self, selenium, timeout)
@@ -71,6 +72,9 @@ class AccountManager(Base):
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: not self.signed_in)
 
+    def click_cancel_account(self):
+        self.selenium.find_element(*self._cancel_account_locator).click()
+
     def change_password(self, old_password, new_password):
         self.click_edit_password()
         self.old_password = old_password
@@ -79,5 +83,11 @@ class AccountManager(Base):
 
     def sign_out(self):
         self.click_sign_out()
+        from home import HomePage  # circular reference
+        return HomePage(self.selenium, self.timeout)
+
+    def cancel_account(self):
+        self.click_cancel_account()
+        self.selenium.switch_to_alert().accept()
         from home import HomePage  # circular reference
         return HomePage(self.selenium, self.timeout)

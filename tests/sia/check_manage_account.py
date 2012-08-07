@@ -79,8 +79,23 @@ class TestManageAccount(SIABaseTest):
 
     @pytest.mark.moztrap(275)
     @pytest.mark.destructive
-    def test_that_user_can_cancel_account(self, mozwebqa):
-        pytest.skip("not implemented yet")
+    def test_that_user_can_cancel_account_with_one_email(self, mozwebqa):
+        user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
+
+        # sign in
+        home = HomePage(mozwebqa.selenium, mozwebqa.timeout)
+        signin = home.click_sign_in()
+        account_manager = signin.sign_in(user.primary_email, user.password)
+
+        # cancel account
+        home = account_manager.cancel_account()
+
+        # verify email not recognized
+        signin = home.click_sign_in()
+        signin.email = user.primary_email
+        signin.click_next()
+        Assert.equal(signin.current_ux_location, 'signing-up')
+
 
     @pytest.mark.destructive
     def test_that_user_can_reset_password(self, mozwebqa):

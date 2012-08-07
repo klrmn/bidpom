@@ -27,7 +27,7 @@ class HomePage(Base):
         WebDriverWait(self.selenium, self.timeout * 2).until(
                 lambda s: s.find_element(*self._sign_in_locator) and \
                 s.find_element(*self._sign_in_locator).is_displayed(),
-                "the sign in button has not appeared within %s" % self.timeout)        
+                "the sign in button has not appeared within %s" % self.timeout * 2)        
 
     def click_sign_up(self):
         self.selenium.find_element(*self._sign_up_locator).click()

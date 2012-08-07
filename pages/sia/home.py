@@ -12,6 +12,7 @@ from base import Base
 from sign_in import SignIn
 
 class HomePage(Base):
+    '''HomePage is used when not logged in. Use AccountManager page if logged in.'''
 
     _page_title = 'Mozilla Persona: A Better Way to Sign In'
     _page_url = '/'
@@ -23,24 +24,10 @@ class HomePage(Base):
     def __init__(self, selenium, timeout):
         Base.__init__(self, selenium, timeout)
 
-        self._full_url = self.selenium.current_url
-
-    def reload_home(self):
-        self.selenium.get(self._full_url)
-
-    def wait_for_page_load(self, logged_in=False):
-        # both login and logout actions seem to take a while
-        if logged_in:
-            WebDriverWait(self.selenium, self.timeout * 2).until(
-                lambda s: s.find_element(*self._sign_out_locator) and \
-                s.find_element(*self._sign_out_locator).is_displayed(),
-                "the sign out button has not appeared within %s" % self.timeout)
-        else:
-            WebDriverWait(self.selenium, self.timeout * 2).until(
+        WebDriverWait(self.selenium, self.timeout * 2).until(
                 lambda s: s.find_element(*self._sign_in_locator) and \
                 s.find_element(*self._sign_in_locator).is_displayed(),
-                "the sign in button has not appeared within %s" % self.timeout)
-
+                "the sign in button has not appeared within %s" % self.timeout)        
 
     def click_sign_up(self):
         self.selenium.find_element(*self._sign_up_locator).click()
@@ -49,20 +36,3 @@ class HomePage(Base):
     def click_sign_in(self):
         self.selenium.find_element(*self._sign_in_locator).click()
         return SignIn(self.selenium, self.timeout)
-
-    @property
-    def is_manage_section_visible(self):
-        return self.selenium.find_element(*self._manage_section_locator).is_displayed()
-
-    @property
-    def is_logged_in(self):
-        return self.selenium.find_element(*self._sign_out_locator).is_displayed()
-
-    @property
-    def is_logged_out(self):
-        return self.selenium.find_element(*self._sign_in_locator).is_displayed()
-
-    def sign_out(self):
-        time.sleep(2)  # this avoids a StaleElementReferenceException
-        self.selenium.find_element(*self._sign_out_locator).click()
-        self.wait_for_page_load(logged_in=False)

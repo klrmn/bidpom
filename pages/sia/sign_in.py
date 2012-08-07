@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 from base import Base
+from account_manager import AccountManager
 
 
 class SignIn(Base):
@@ -107,11 +108,9 @@ class SignIn(Base):
         self.click_next()
         self.password = password
         self.click_sign_in()
-        # should redirect to home page
-        from home import HomePage  # circular reference
-        home = HomePage(self.selenium, self.timeout)
-        home.wait_for_page_load(logged_in=True)
-        return home
+        # should redirect to Account Manager (home, logged in) page
+        actmgr = AccountManager(self.selenium, self.timeout)
+        return actmgr
 
     def sign_up(self, email, password):
         """Signs up with the provided email address and password."""

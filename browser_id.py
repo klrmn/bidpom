@@ -16,7 +16,7 @@ class BrowserID(object):
     CONFIRM_URL_REGEX = 'https?:\/\/(\S+)\/confirm\?token=(.{48})'
     RESET_URL_REGEX = 'https?:\/\/(\S+)\/reset_password\?token=(.{48})'
     INCLUDE_URL_REGEX = '(https?:\/\/(\S+))\/include\.js'
-    TOKEN_URL_REGEX = '(https?/.*?token=.{48})'
+    TOKEN_URL_REGEX = '(https?:.*?token=.{48})'
 
     def __init__(self, selenium, timeout=60):
         self.selenium = selenium
@@ -42,11 +42,13 @@ class BrowserID(object):
         else:
             raise Exception('Unable to determine BrowserID URL from %s.' % base_url)
 
-    def get_confirm_url_from_email(self, email):
+    def get_confirm_url_from_email(self, email, message_count=1):
         '''
         Checks the restmail inbox for the specified address
         and returns the confirm url.
+        Specify message_count if you expect there to be more than one message for the user.
         May be called like "BrowserID(None, None).get_confirm_url_from_email('george@restmail.com')"
         '''
-        mail = restmail.get_mail(email, timeout=60)
-        return re.search(self.VERIFY_URL_REGEX, mail[0]['text']).group(0)
+        mail = restmail.get_mail(email, message_count=message_count, timeout=60)
+        message_text = mail[message_count - 1]['text']
+        return re.search(self.TOKEN_URL_REGEX, message_text).group(0)

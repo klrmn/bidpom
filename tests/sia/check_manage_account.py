@@ -61,7 +61,7 @@ class TestManageAccount(SIABaseTest):
         home = HomePage(mozwebqa.selenium, mozwebqa.timeout)
         signin = home.click_sign_in()
         account_manager = signin.sign_in(user.primary_email, user.password)
-        assert user.primary_email in account_manager.emails
+        Assert.contains(user.primary_email, account_manager.emails)
 
         # change password
         old_password = user.password
@@ -75,7 +75,7 @@ class TestManageAccount(SIABaseTest):
         signin = home.click_sign_in()
         account_manager = signin.sign_in(user.primary_email, user.password)
         Assert.true(account_manager.signed_in)
-        assert user.primary_email in account_manager.emails
+        Assert.contains(user.primary_email, account_manager.emails)
 
     @pytest.mark.moztrap(275)
     @pytest.mark.destructive
@@ -99,4 +99,27 @@ class TestManageAccount(SIABaseTest):
 
     @pytest.mark.destructive
     def test_that_user_can_reset_password(self, mozwebqa):
-        pytest.skip("not implemented yet")
+        user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
+
+        # start to sign in
+        home = HomePage(mozwebqa.selenium, mozwebqa.timeout)
+        signin = home.click_sign_in()
+
+        # forgot password
+        user.password += '_new'
+        signin.forgot_password(user.primary_email, user.password)
+        Assert.equal(signin.result_notification_title, 'Confirm your email address')
+
+        # confirm email
+        CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 
+            BrowserID(None, None).get_confirm_url_from_email(user.primary_email, message_count=2), 
+            expect='reset')
+
+        # sign out
+        account_manager = home.reload_original_url()
+        home = account_manager.sign_out()
+
+        # sign in with new password
+        signin = home.click_sign_in()
+        account_manager = signin.sign_in(user.primary_email, user.password)
+        Assert.true(account_manager.signed_in)

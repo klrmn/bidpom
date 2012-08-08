@@ -23,7 +23,7 @@ class CompleteRegistration(Base):
         class init method
         :Args:
         - url - the confirmation url from the email
-        - expect - redirect/success/verify (default redirect)
+        - expect - redirect/success/reset/verify (default redirect)
         """
         Base.__init__(self, selenium, timeout)
 
@@ -36,6 +36,10 @@ class CompleteRegistration(Base):
         elif expect == 'success':
             WebDriverWait(self.selenium, self.timeout).until(
                 lambda s: 'Thank you' in s.find_element(*self._thank_you_locator).text,
+                "Complete Registration did not succeed")
+        elif expect == 'reset':
+            WebDriverWait(self.selenium, self.timeout).until(
+                lambda s: 'verified' in s.find_element(*self._thank_you_locator).text,
                 "Complete Registration did not succeed")
         elif expect == 'verify':
             WebDriverWait(self.selenium, self.timeout).until(

@@ -20,7 +20,10 @@ class SignIn(Base):
     _verify_email_locator =(By.ID, 'verifyEmail')
     _password_locator = (By.ID, 'password')
     _password_verify_locator = (By.ID, 'vpassword')
-    _result_notification_title_locator = (By.CSS_SELECTOR, 'li.notification.emailsent > h2')
+    _forgot_password_locator = (By.CSS_SELECTOR, 'a.forgot')
+    _reset_password_locator = (By.CSS_SELECTOR, '#signUpForm button')
+    # it's an li for sign-up or  a div for reset password, so don't specify node type
+    _result_notification_title_locator = (By.CSS_SELECTOR, '.notification.emailsent > h2')
 
     def __init__(self, selenium, timeout=60):
         Base.__init__(self, selenium, timeout)
@@ -97,6 +100,18 @@ class SignIn(Base):
         field.clear()
         field.send_keys(value)
 
+    def click_forgot_password(self):
+        self.selenium.find_element(*self._forgot_password_locator).click()
+        WebDriverWait(self.selenium, self.timeout).until(
+            lambda s: s.find_element(*self._password_verify_locator).is_displayed(),
+            "verify password field did not appear within %s" % self.timeout)
+
+    def click_reset_password(self):
+        self.selenium.find_element(*self._reset_password_locator).click()
+        WebDriverWait(self.selenium, self.timeout).until(
+            lambda s: s.find_element(*self._result_notification_title_locator).is_displayed(),
+            "verify email action did not produce result")
+
     @property
     def result_notification_title(self):
         """Get the text of the result notification title."""
@@ -144,3 +159,11 @@ class SignIn(Base):
         self.verify_password = password
         self.click_verify_email()
         # does not redirect to anywhere
+
+    def forgot_password(self, email, new_password):
+        self.click_forgot_password()
+        self.password = new_password
+        self.verify_password = new_password
+        self.click_reset_password()
+        # does not redirect to anywhere
+

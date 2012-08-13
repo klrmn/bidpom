@@ -28,7 +28,7 @@ class TestManageAccount(SIABaseTest):
         Assert.equal(signup.result_notification_title, 'Confirm your email address')
 
         # do email verification
-        comp_reg = CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 
+        CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 
             BrowserID(None, None).get_confirm_url_from_email(user.primary_email), 
             expect='success')
 

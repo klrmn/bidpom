@@ -26,14 +26,14 @@ class SIABaseTest(object):
 
         # do email verification
         from ... pages.sia.complete_registration import CompleteRegistration
-        comp_reg = CompleteRegistration(selenium, timeout, 
+        complete_registration = CompleteRegistration(selenium, timeout, 
             BrowserID(None, None).get_confirm_url_from_email(user.primary_email), 
             expect='success')
-        assert 'Thank you' in comp_reg.thank_you
+        assert 'Thank you' in complete_registration.thank_you
 
         # go sign out and reload page for preconditions
-        actmng = home.reload_original_url()
-        actmng.sign_out()
+        account_manager = home.reload_original_url()
+        account_manager.sign_out()
         home.reload_original_url()  # test will instantiate HomePage
 
         return user

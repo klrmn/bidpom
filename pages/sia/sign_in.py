@@ -101,12 +101,14 @@ class SignIn(Base):
         field.send_keys(value)
 
     def click_forgot_password(self):
+        """Clicks the forgot password link."""
         self.selenium.find_element(*self._forgot_password_locator).click()
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.find_element(*self._password_verify_locator).is_displayed(),
             "verify password field did not appear within %s" % self.timeout)
 
     def click_reset_password(self):
+        """Clicks the reset password button."""
         self.selenium.find_element(*self._reset_password_locator).click()
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.find_element(*self._result_notification_title_locator).is_displayed(),
@@ -142,7 +144,10 @@ class SignIn(Base):
         raise Exception("current ux location not known")
 
     def sign_in(self, email, password):
-        """Signs in with the provided email address and password."""
+        """
+        Helper method sign_in(email, password) signs in with the provided email 
+        address and password.
+        """
         self.email = email
         self.click_next()
         self.password = password
@@ -152,7 +157,10 @@ class SignIn(Base):
         return actmgr
 
     def sign_up(self, email, password):
-        """Signs up with the provided email address and password."""
+        """
+        Helper method sign_up(email, password) signs up with the provided email 
+        address and password.
+        """
         self.email = email
         self.click_next()
         self.password = password
@@ -161,6 +169,10 @@ class SignIn(Base):
         # does not redirect to anywhere
 
     def forgot_password(self, email, new_password):
+        """
+        Helper method forgot_password(email, new_password) performs the series of
+        actions required to reset the user's password.
+        """
         self.click_forgot_password()
         self.password = new_password
         self.verify_password = new_password

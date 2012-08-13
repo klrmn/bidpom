@@ -29,6 +29,7 @@ class AccountManager(Base):
 
     @property
     def emails(self):
+        """Returns a textual list of email addresses associated with the currently signed in user."""
         return [element.text for element in self.selenium.find_elements(*self._emails_locator)]
 
     def click_edit_password(self):
@@ -68,25 +69,42 @@ class AccountManager(Base):
             lambda s: s.find_element(*self._edit_password_button_locator).is_displayed())
 
     def click_sign_out(self):
+        """Click the Sign Out button"""
         self.selenium.find_element(*self._sign_out_locator).click()
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: not self.signed_in)
 
     def click_cancel_account(self):
+        """Click the cancel account link."""
         self.selenium.find_element(*self._cancel_account_locator).click()
 
     def change_password(self, old_password, new_password):
+        """
+        Helper function change_password(old_password, new_password) performs the
+        series of actions necessary to change the password.
+        """
+
         self.click_edit_password()
         self.old_password = old_password
         self.new_password = new_password
         self.click_password_done()
 
     def sign_out(self):
+        """
+        Helper function sign_out() performs the series of actions necessary to
+        sign out.
+        """
+
         self.click_sign_out()
         from home import HomePage  # circular reference
         return HomePage(self.selenium, self.timeout)
 
     def cancel_account(self):
+        """
+        Helper function cancel_account() performs the series of actions necessary
+        to cancel the account of the currently signed in user.
+        """
+
         self.click_cancel_account()
         self.selenium.switch_to_alert().accept()
         from home import HomePage  # circular reference

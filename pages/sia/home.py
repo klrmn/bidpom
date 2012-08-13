@@ -30,9 +30,11 @@ class HomePage(Base):
                 "the sign in button has not appeared within %s" % self.timeout * 2)        
 
     def click_sign_up(self):
+        """Clicks the Sign Up button."""
         self.selenium.find_element(*self._sign_up_locator).click()
         return SignIn(self.selenium, self.timeout)
 
     def click_sign_in(self):
+        """Clicks the Sign In button."""
         self.selenium.find_element(*self._sign_in_locator).click()
         return SignIn(self.selenium, self.timeout)

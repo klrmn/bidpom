@@ -19,6 +19,7 @@ class Base(object):
 
     @property
     def signed_in(self):
+        """Returns True/False whether a user is signed in."""
         return 'not_authenticated' not in self.selenium.find_element(*self._body_locator).get_attribute('class')
 
     def reload_original_url(self):
@@ -48,6 +49,7 @@ class Base(object):
             raise Exception('unexpected situation encountered')
 
     def wait_for_ajax(self):
+        """Waits for the script 'jQuery.active == 0'."""
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.execute_script("return jQuery.active == 0"),
             "Wait for AJAX timed out after %s seconds" % self.timeout)

@@ -11,6 +11,7 @@ from ... browser_id import BrowserID
 from ... pages.sia.home import HomePage
 from ... pages.sia.complete_registration import CompleteRegistration
 from ... mocks.user import MockUser
+from .. import restmail
 
 from base import SIABaseTest
 
@@ -29,7 +30,7 @@ class TestManageAccount(SIABaseTest):
 
         # do email verification
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 
-            BrowserID(None, None).get_confirm_url_from_email(user.primary_email), 
+            restmail.get_confirm_url_from_email(user.primary_email), 
             expect='success')
 
         # verify now logged in
@@ -109,7 +110,7 @@ class TestManageAccount(SIABaseTest):
 
         # confirm email
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 
-            BrowserID(None, None).get_confirm_url_from_email(user.primary_email, message_count=2), 
+            restmail.get_confirm_url_from_email(user.primary_email, message_count=2), 
             expect='reset')
 
         # sign out

@@ -34,7 +34,7 @@ class SignIn(Base):
     @property
     def email(self):
         """Get the value of the email field."""
-        return self.selenium.find_element(*self._email_locator).text
+        return self.selenium.find_element(*self._email_locator).get_attribute('value')
 
     @email.setter
     def email(self, value):
@@ -77,7 +77,7 @@ class SignIn(Base):
     @property 
     def password(self):
         """Get the value of the password field."""
-        return self.selenium.find_element(*self._password_locator).text
+        return self.selenium.find_element(*self._password_locator).get_attribute('value')
 
     @password.setter
     def password(self, value):
@@ -89,7 +89,7 @@ class SignIn(Base):
     @property
     def verify_password(self):
         """Get the value of the verify password field."""
-        return self.selenium.find_element(*self._password_verify_locator).text
+        return self.selenium.find_element(*self._password_verify_locator).get_attribute('value')
 
     @verify_password.setter
     def verify_password(self, value):

@@ -27,8 +27,10 @@ class TestSignIn(BaseTest):
         from ... pages.rp.sign_in import SignIn
         signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='new')
         signin.email = mozwebqa.email
+        assert signin.email == mozwebqa.email
         signin.click_next(expect='password')
         signin.password = mozwebqa.password
+        assert signin.password == mozwebqa.password
         signin.click_sign_in()
 
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
@@ -51,9 +53,12 @@ class TestSignIn(BaseTest):
         signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='new')
         print 'signing in as %s' % user.primary_email
         signin.email = user.primary_email
+        assert signin.email == user.primary_email
         signin.click_next(expect='verify')
         signin.password = user.password
         signin.verify_password = user.password
+        assert signin.password == user.password
+        assert signin.verify_password == user.password
         signin.click_verify_email()
         assert signin.check_email_at_address == user.primary_email
 

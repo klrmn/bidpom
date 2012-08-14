@@ -25,7 +25,7 @@ class TestManageAccount(SIABaseTest):
         # sign up
         signup = home.click_sign_up()
         signup.sign_up(user.primary_email, user.password)
-        Assert.equal(signup.result_notification_title, 'Confirm your email address')
+        Assert.equal(signup.check_your_email_title_text, 'Confirm your email address')
 
         # do email verification
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 
@@ -53,7 +53,6 @@ class TestManageAccount(SIABaseTest):
         Assert.false(home.signed_in)
 
     @pytest.mark.moztrap(274)
-    @pytest.mark.destructive
     def test_that_user_can_change_password(self, mozwebqa):
         user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
 
@@ -78,7 +77,6 @@ class TestManageAccount(SIABaseTest):
         Assert.contains(user.primary_email, account_manager.emails)
 
     @pytest.mark.moztrap(275)
-    @pytest.mark.destructive
     def test_that_user_can_cancel_account_with_one_email(self, mozwebqa):
         user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
 
@@ -97,7 +95,6 @@ class TestManageAccount(SIABaseTest):
         Assert.equal(signin.current_ux_location, 'signing-up')
 
 
-    @pytest.mark.destructive
     def test_that_user_can_reset_password(self, mozwebqa):
         user = self.create_verified_user(mozwebqa.selenium, mozwebqa.timeout)
 
@@ -108,7 +105,7 @@ class TestManageAccount(SIABaseTest):
         # forgot password
         user.password += '_new'
         signin.forgot_password(user.primary_email, user.password)
-        Assert.equal(signin.result_notification_title, 'Confirm your email address')
+        Assert.equal(signin.check_your_email_title_text, 'Confirm your email address')
 
         # confirm email
         CompleteRegistration(mozwebqa.selenium, mozwebqa.timeout, 

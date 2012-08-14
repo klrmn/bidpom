@@ -14,16 +14,14 @@ from account_manager import AccountManager
 class SignIn(Base):
 
     _email_locator = (By.ID, 'email')
-    # https://github.com/mozilla/browserid/issues/2211
-    _next_locator = (By.CSS_SELECTOR, 'div.submit.start > button')
-    _sign_in_locator = (By.CSS_SELECTOR, 'div.submit.password_entry > button')
+    _next_locator = (By.ID, 'next')
+    _sign_in_locator = (By.ID, 'signIn')
     _verify_email_locator =(By.ID, 'verifyEmail')
     _password_locator = (By.ID, 'password')
     _password_verify_locator = (By.ID, 'vpassword')
     _forgot_password_locator = (By.CSS_SELECTOR, 'a.forgot')
     _reset_password_locator = (By.CSS_SELECTOR, '#signUpForm button')
-    # it's an li for sign-up or  a div for reset password, so don't specify node type
-    _result_notification_title_locator = (By.CSS_SELECTOR, '.notification.emailsent > h2')
+    _check_your_email_locator = (By.CSS_SELECTOR, '.notification.emailsent > h2')
 
     def __init__(self, selenium, timeout=60):
         Base.__init__(self, selenium, timeout)
@@ -46,7 +44,7 @@ class SignIn(Base):
         field.send_keys(value)
 
     def click_next(self):
-        """This is the operative button after filling in email."""
+        """Click the 'next' button (after filling in email)."""
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.find_element(*self._next_locator) and \
             s.find_element(*self._next_locator).is_displayed(),
@@ -58,7 +56,7 @@ class SignIn(Base):
         )
 
     def click_sign_in(self):
-        """This is the operative button after filling in password in sign-in."""
+        """Click the 'Sign In' button (after filling in password in the sign-in flow)."""
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.find_element(*self._sign_in_locator) and \
             s.find_element(*self._sign_in_locator).is_displayed(),
@@ -66,15 +64,15 @@ class SignIn(Base):
         self.selenium.find_element(*self._sign_in_locator).click()
 
     def click_verify_email(self):
-        """This is the operative button after filling in password and verify in sign-up."""
+        """Click the 'Verify Email' button (after filling in password and verify in the sign-up flow)."""
         WebDriverWait(self.selenium, self.timeout).until(
             lambda s: s.find_element(*self._verify_email_locator) and \
             s.find_element(*self._verify_email_locator).is_displayed(),
             "verify email button not found / not visible")
         self.selenium.find_element(*self._verify_email_locator).click()
         WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: s.find_element(*self._result_notification_title_locator).is_displayed(),
-            "verify email action did not produce result")
+            lambda s: s.find_element(*self._check_your_email_locator).is_displayed(),
+            "check your email message did not appear")
 
     @property 
     def password(self):
@@ -111,13 +109,13 @@ class SignIn(Base):
         """Clicks the reset password button."""
         self.selenium.find_element(*self._reset_password_locator).click()
         WebDriverWait(self.selenium, self.timeout).until(
-            lambda s: s.find_element(*self._result_notification_title_locator).is_displayed(),
-            "verify email action did not produce result")
+            lambda s: s.find_element(*self._check_your_email_locator).is_displayed(),
+            "check your email message did not appear")
 
     @property
-    def result_notification_title(self):
+    def check_your_email_title_text(self):
         """Get the text of the result notification title."""
-        return self.selenium.find_element(*self._result_notification_title_locator).text
+        return self.selenium.find_element(*self._check_your_email_locator).text
 
     @property 
     def current_ux_location(self):
@@ -139,7 +137,7 @@ class SignIn(Base):
                     return 'signing-in'
             elif s.find_element(*self._next_locator).is_displayed():
                 return 'email'
-        elif s.find_element(*self._result_notification_title_locator).is_displayed():
+        elif s.find_element(*self._check_your_email_locator).is_displayed():
             return 'verifying'
         raise Exception("current ux location not known")
 

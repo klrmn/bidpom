@@ -19,7 +19,8 @@ class TestSignIn(BaseTest):
 
     def test_sign_in_helper(self, mozwebqa):
         browser_id = BrowserID(mozwebqa.selenium, mozwebqa.timeout)
-        browser_id.sign_in(mozwebqa.email, mozwebqa.password)
+        credentials = mozwebqa.credentials['default']
+        browser_id.sign_in(credentials['email'], credentials['password'])
 
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
             lambda s: s.find_element_by_id('loggedin').is_displayed())
@@ -27,11 +28,12 @@ class TestSignIn(BaseTest):
     def test_sign_in(self, mozwebqa):
         from .. pages.sign_in import SignIn
         signin = SignIn(mozwebqa.selenium, mozwebqa.timeout, expect='new')
-        signin.email = mozwebqa.email
-        assert signin.email == mozwebqa.email, "email getter failed"
+        credentials = mozwebqa.credentials['default']
+        signin.email = credentials['email']
+        assert signin.email == credentials['email'], "email getter failed"
         signin.click_next(expect='password')
-        signin.login_password = mozwebqa.password
-        assert signin.login_password == mozwebqa.password, "password getter failed"
+        signin.login_password = credentials['password']
+        assert unicode(signin.login_password) == unicode(credentials['password']), "password getter failed"
         signin.click_sign_in()
 
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
@@ -75,7 +77,8 @@ class TestSignIn(BaseTest):
 
     def test_sign_in_is_this_your_computer(self, mozwebqa):
         browser_id = BrowserID(mozwebqa.selenium, mozwebqa.timeout)
-        browser_id.sign_in(mozwebqa.email, mozwebqa.password)
+        credentials = mozwebqa.credentials['default']
+        browser_id.sign_in(credentials['email'], credentials['password'])
 
         WebDriverWait(mozwebqa.selenium, mozwebqa.timeout).until(
             lambda s: s.find_element_by_id('loggedin').is_displayed())
